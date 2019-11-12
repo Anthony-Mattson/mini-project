@@ -1,8 +1,7 @@
+require 'rubygems'
+
 require 'sinatra'
-get '/' do
-   "Automation for the people!"
-end  
 
 get '/' do
-  time.strftime("%A %b-%d-%y %H:%M:%S %p")
-end  
+  "Automation for the people!, it's #{Time.now} and time to party!"
+end
