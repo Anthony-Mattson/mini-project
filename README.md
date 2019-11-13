@@ -3,11 +3,11 @@ First quarter mini project
 
 Required components
 ----------------
-Sinatra microframework
-Rubygems
-Docker
-AWS Fargate
-CodePipeline/CodeBuild/CodeDeploy
+- Sinatra microframework
+- Rubygems
+- Docker
+- AWS Fargate
+- CodePipeline/CodeBuild/CodeDeploy
 
 
 Provision a new web app server with the following expectations
