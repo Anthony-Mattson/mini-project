@@ -11,6 +11,7 @@ def homepage(standard_time)
 end
 
 def standard_time
-  Time.now
+ time = Time.now
+  time.strftime("%A %b-%d-%y %H:%M:%S %p")
 end
 
