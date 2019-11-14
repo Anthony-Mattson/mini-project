@@ -1,17 +1,15 @@
 require_relative './spec_helper.rb'
 require_relative '../mini-project.rb'
 
-describe unittest_homepage_valid do
-   it valid_response = "My name is Anthony and the time is #{time1}" do
+def unittest_homepage_valid
     time1 = 'Nov 11 18:05'
-    expect assert_true(home_page(time1), valid_response)
-    end
-end 
-
-describe unittest_homepage_invalid do
-    it valid_response = "My name is Anthony and the time is #{time1}" do
-        time1 = 'Nov 11 18:05'
-        time2 = 'Nov 12 15:05' 
-    expect assert_false(home_page(time2), valid_response)
-    end
-end
+    valid_response = "My name is Anthony and the time is #{time1}"
+    assert_true(home_page(time1), valid_response)
+  end
+  
+  def unittest_homepage_invalid
+    time1 = 'Nov 11 18:05'
+    time2 = 'Nov 12 15:05'
+    valid_response = "My name is Anthony and the time is #{time1}"
+    assert_false(home_page(time2), valid_response)
+  end
