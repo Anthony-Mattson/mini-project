@@ -8,6 +8,7 @@ Required components
 - Docker
 - AWS Fargate
 - CodePipeline/CodeBuild/CodeDeploy
+- Rspec
 
 
 Provision a new web app server with the following expectations
