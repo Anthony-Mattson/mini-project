@@ -1,15 +1,19 @@
-require_relative './spec_helper.rb'
-require_relative '../mini-project.rb'
+require "./mini-project"
 
-def unittest_homepage_valid
-    time1 = 'Nov 11 18:05'
-    valid_response = "My name is Anthony and the time is #{time1}"
-    assert_true(home_page(time1), valid_response)
-  end
-  
-  def unittest_homepage_invalid
-    time1 = 'Nov 11 18:05'
-    time2 = 'Nov 12 15:05'
-    valid_response = "My name is Anthony and the time is #{time1}"
-    assert_false(home_page(time2), valid_response)
-  end
+describe 'unittest_homepage' do
+    it 'displays the correct text and current time' do
+        time1 = 'Nov 14 13:50'
+        expect(homepage(time1)).to eq("Automation for the people!, it's #{time1} and its time to party!")
+    end
+end
+
+
+
+describe 'unittest_homepage_invalid' do
+    it 'displays the incorrect text and current time' do
+        time1 = 'Nov 14 13:50'
+        time2 = 'Nov 18 12:30'
+        valid_response = (homepage(time1)).to eq("Automation for the people!, it's #{time1} and its time to party!")
+        expect(homepage(time2)).to eq("Automation for the people!, it's #{time1} and its time to party!")
+    end
+end
