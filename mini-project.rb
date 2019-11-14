@@ -7,7 +7,7 @@ get '/' do
 end
 
 def homepage(standard_time)
-  "Automation for the people!, it's #{standard_time} and time to party!"
+  "Automation for the people!, it's #{standard_time} and its time to party!"
 end
 
 def standard_time
