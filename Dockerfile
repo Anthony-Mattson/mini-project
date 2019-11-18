@@ -1,4 +1,4 @@
 FROM ruby:2.6-alpine
 COPY . .
 RUN gem install sinatra
-EXPOSE 4567:4567
+EXPOSE 4567/tcp
