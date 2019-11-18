@@ -3,6 +3,7 @@ First quarter mini project
 
 Required components
 ----------------
+- Ruby 2.6
 - Sinatra microframework
 - Rubygems
 - Docker
