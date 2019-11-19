@@ -2,11 +2,11 @@ require 'rubygems'
 
 require 'sinatra'
 
-get '/' do 
+get '/' do
   homepage(standard_time)
 end
 
-get '/health' do 
+get '/health' do
   'OK'
 end
 
@@ -15,6 +15,6 @@ def homepage(standard_time)
 end
 
 def standard_time
- time = Time.now
- time.strftime("%A %b-%d-%y %H:%M:%S %p")
-end
+  time = Time.now
+  time.strftime('%A %b-%d-%y %H:%M:%S %p')
+end'\n'
