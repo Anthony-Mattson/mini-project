@@ -1,3 +1,5 @@
 Metrics/LineLength:
-  Max: 110
-  
+  Max: 120
+
+Layout/TrailingBlankLines:
+  Enabled: false
