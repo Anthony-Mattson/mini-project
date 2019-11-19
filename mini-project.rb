@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rubygems'
 
 require 'sinatra'
@@ -17,4 +19,4 @@ end
 def standard_time
   time = Time.now
   time.strftime('%A %b-%d-%y %H:%M:%S %p')
-end'\n'
+end
