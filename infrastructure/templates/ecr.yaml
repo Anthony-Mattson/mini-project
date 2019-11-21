@@ -1,0 +1,23 @@
+Description: "Ecr template for mini-project that deploys the pipeline and it's dependancies."
+Parameters: 
+  RepoName: 
+    Type: String
+    Default: anthony-miniproject
+    Description: Repository name for the miniproject
+
+Resources:
+  AnthonyMiniProject:
+    Type: AWS::ECR::Repository
+    Properties: 
+      RepositoryName: !Ref RepoName
+  
+  # CodePipeline:
+
+  # CodeBuild:
+
+Outputs:
+  ECROutput:
+    Description: "Arn of ECR"
+    Value: !Ref AnthonyMiniProject
+    Export:
+      Name: "anthony-mini-project-ecr"
