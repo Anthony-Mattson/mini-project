@@ -1,0 +1,38 @@
+Description: "Tempalte for deploying the Fargate resources."
+
+Parameters:
+  AppPort:
+    Descirption: "Port exposed by the contianer."
+    Default: 9292
+
+Resources:
+
+# ECS Resources 
+
+  Cluster:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-cluster.html
+    Type: AWS::ECS::Cluster
+
+  Service:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html
+    Type: AWS::ECS::Service
+    Propeties:
+      Cluster: !Ref Cluster
+      DesiredCount: 1
+      LaunchType: FARGATE
+      TaskDefinition: !Ref TaskDefinition || !GetAtt TaskDefinition.Arn
+      LoadBalancer:
+        ContainerName: "anthony_mini_project"
+        ContainerPort: !Ref AppPort
+  
+  TaskDefinition:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskdefinition.html
+    Type: AWS::ECS::TaskDefinition
+    Properties: 
+      RequiresCompatibilities:
+        - "FARGATE"
+      ContainerDefinitions: 
+        - Name: "anthony-miniproject"
+          Image: "mini_project:latest" # change to ECR output. <- Use the export from pipeline.yaml HERE
+          Cpu: "256" # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
+          Memory: "512"
