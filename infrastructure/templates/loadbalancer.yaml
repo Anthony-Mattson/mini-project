@@ -1,0 +1,24 @@
+Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+Properties: 
+  IpAddressType: ipv4
+  Scheme: internet-facing
+  #SubnetMappings: 
+   # -AllocationId: String
+   # -SubnetId: String
+  Type: application
+  Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  HealthCheckEnabled: Boolean
+  HealthCheckIntervalSeconds: 30
+  HealthCheckPath: localhost:9292/health
+  HealthCheckPort: traffic-port
+  HealthCheckProtocol: HTTP
+  HealthCheckTimeoutSeconds: 5
+  HealthyThresholdCount: 5
+  Matcher: 
+    Matcher
+  Name: String
+  Port: Integer
+  Protocol: HTTPS
+  TargetType: instance
+  UnhealthyThresholdCount: 2
+  VpcId: String
