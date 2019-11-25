@@ -1,38 +1,54 @@
-Description: "Tempalte for deploying the Fargate resources."
+Description: "Template for deploying the Fargate resources."
 
 Parameters:
   AppPort:
-    Descirption: "Port exposed by the contianer."
+    Descirption: "Port exposed by the container."
     Default: 9292
+  DockerImage: 
+    Descirption: "Default docker image."
+    Default: "324320755747.dkr.ecr.us-east-1.amazonaws.com/anthony-miniproject:latest"
+    Type: String
 
 Resources:
 
-# ECS Resources 
 
   Cluster:
-  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-cluster.html
     Type: AWS::ECS::Cluster
 
   Service:
-  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html
     Type: AWS::ECS::Service
     Propeties:
+      ServiceName: "anthony-miniproject"
       Cluster: !Ref Cluster
       DesiredCount: 1
       LaunchType: FARGATE
-      TaskDefinition: !Ref TaskDefinition || !GetAtt TaskDefinition.Arn
+      TaskDefinition: !Ref TaskDefinition
       LoadBalancer:
         ContainerName: "anthony_mini_project"
         ContainerPort: !Ref AppPort
-  
+        TargetGroupArn: !Ref output from load balancer template
+        DeployementController: ECS || CODE_DEPLOY
+        DeployementConfiguration:
+           MaximumPercent: 200 || na
+           MinimumHealthyPercent: 50 || na
   TaskDefinition:
-  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskdefinition.html
     Type: AWS::ECS::TaskDefinition
     Properties: 
       RequiresCompatibilities:
         - "FARGATE"
       ContainerDefinitions: 
         - Name: "anthony-miniproject"
-          Image: "mini_project:latest" # change to ECR output. <- Use the export from pipeline.yaml HERE
-          Cpu: "256" # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html
+          Image: !Ref DockerImage
+          Cpu: "256"
           Memory: "512"
+          Heathcheck:
+            Command: 
+              - [ "CMD-SHELL", "curl -f http://localhost:9292 || exit 1" ]
+            Interval: 30
+            Retries: 3
+            Timeout: 5
+          PortMappings:
+            ContainerPort: 9292
+            HostPort: 9292
+            Protocol: tcp
+      NetworkMode: awsvpc
