@@ -9,7 +9,7 @@ Properties:
   Type: AWS::ElasticLoadBalancingV2::TargetGroup
   HealthCheckEnabled: Boolean
   HealthCheckIntervalSeconds: 30
-  HealthCheckPath: localhost:9292/health
+  HealthCheckPath: /health
   HealthCheckPort: traffic-port
   HealthCheckProtocol: HTTP
   HealthCheckTimeoutSeconds: 5
