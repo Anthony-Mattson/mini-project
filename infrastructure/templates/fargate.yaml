@@ -4,7 +4,7 @@ Parameters:
   AppPort:
     Descirption: "Port exposed by the container."
     Default: 9292
-  DockerImage: 
+  Image: 
     Descirption: "Default docker image."
     Default: "324320755747.dkr.ecr.us-east-1.amazonaws.com/anthony-miniproject:latest"
     Type: String
@@ -49,6 +49,5 @@ Resources:
             Timeout: 5
           PortMappings:
             ContainerPort: 9292
-            HostPort: 9292
             Protocol: tcp
       NetworkMode: awsvpc
