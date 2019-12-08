@@ -39,6 +39,20 @@ Resources:
         - !Ref SubnetId1
         - !Ref SubnetId2
       Type: application
+  Listener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties: 
+      Certificates: 
+        - Type: AWS::ElasticLoadBalancingV2::ListenerCertificate
+          Properties: 
+            Certificates: 
+              - Certificate
+                ListenerArn: String
+          DefaultActions: 
+              - redirect
+          LoadBalancerArn: ??
+            Port: 9292
+            Protocol: HTTP
 
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
