@@ -31,7 +31,7 @@ Resources:
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Name: anthony-mini-project-loadbalancer
+      Name: anthony-loadbalancer
       Scheme: internet-facing
       SecurityGroups:
         - !GetAtt HttpSecurityGroup.GroupId
@@ -42,17 +42,12 @@ Resources:
   Listener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties: 
-      Certificates: 
-        - Type: AWS::ElasticLoadBalancingV2::ListenerCertificate
-          Properties: 
-            Certificates: 
-              - Certificate
-                ListenerArn: String
-          DefaultActions: 
-              - redirect
-          LoadBalancerArn: ??
-            Port: 9292
-            Protocol: HTTP
+      DefaultActions: 
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroup
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 80
+      Protocol: HTTP
 
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
