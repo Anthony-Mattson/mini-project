@@ -11,10 +11,6 @@ Resources:
     Properties: 
       RepositoryName: !Ref RepoName
   
-  # CodePipeline:
-
-  # CodeBuild:
-
 Outputs:
   ECROutput:
     Description: "Arn of ECR"
