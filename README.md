@@ -30,3 +30,14 @@ Expected output
 - The web application must supply a simple endpoint.
 The web app than must return the current timestamp and “Automation for the People!”.
 - Must be over an SSL connection.
+
+Deploy
+---
+
+- Deploy the ECR 
+- CodePipeline; CodeDeploy (Create the image) -> ECR (zip . artifacts/version.zip)
+- Deploy Fargate Resource
+
+Source <- GitHub
+Build <- docker build, docker push (to ecr), tests`
+Deploy <- fargate.yaml create OR update resoruce via changeset.
