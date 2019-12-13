@@ -25,10 +25,10 @@ Resources:
         ContainerName: "anthony_mini_project"
         ContainerPort: !Ref AppPort
         TargetGroupArn: !Ref output from load balancer template
-      DeploymentController: ECS # CODE_DEPLOY
+      DeploymentController: ECS 
       DeploymentConfiguration:
-        MaximumPercent: 200 # Can be defaulted if using code_deploy or fargate
-        MinimumHealthyPercent: 50 # Can be defaulted if using code_deploy or fargate
+        MaximumPercent: 200 
+        MinimumHealthyPercent: 50
 
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
