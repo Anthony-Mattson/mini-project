@@ -1,4 +1,4 @@
-Description: "Template for deployingh the load balancer."
+Description: "Template for deploying the load balancer."
 
 Parameters:
   SubnetId1:
