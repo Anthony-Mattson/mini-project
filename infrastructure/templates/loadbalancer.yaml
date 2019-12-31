@@ -14,19 +14,30 @@ Parameters:
     Type: String
     Default: vpc-001084ff8ad166449
 
+  CertArn:
+    Description: "Default certification arn"
+    Type: String
+    Default: arn:aws:acm:us-east-1:324320755747:certificate/f0cb5933-f42d-4b73-a971-b74ad8b86da3
+
 Resources:
   HttpSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: "Allow inbound traffic from the internet"
+      GroupDescription: "Allow inbound traffic (HTTP & HTTPS) from the internet"
       GroupName: anthony-mini-project-security-group
       SecurityGroupIngress:
         - CidrIp: 0.0.0.0/0
-          Description: "Inbound traffic from internet"
+          Description: "Inbound HTTP traffic from internet"
           FromPort: 80
           IpProtocol: tcp
           ToPort: 80
+        - CidrIp: 0.0.0.0/0
+          Description: "Inbound HTTPS traffic from internet"
+          FromPort: 443
+          IpProtocol: tcp
+          ToPort: 443
       VpcId: !Ref VpcId
+  
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
@@ -38,12 +49,18 @@ Resources:
         - !Ref SubnetId1
         - !Ref SubnetId2
       Type: application
-  Listener:
+  
+  RedirectListener: # Port 80 -> 443
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
-        - Type: forward
-          TargetGroupArn: !Ref TargetGroup
+        - Type: redirect
+          RedirectConfig:
+            Protocol: "HTTPS"
+            Port: "443"
+            Host: "#{host}"
+            Path: "/#{path}"
+            StatusCode: "HTTP_301"
       LoadBalancerArn: !Ref LoadBalancer
       Port: 80
       Protocol: HTTP
@@ -52,8 +69,21 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::ListenerCertificate
     Properties: 
       Certificates: 
-        - Certificate
-        ListenerArn: String
+        - CertificateArn: !Ref CertArn
+      ListenerArn: !Ref Listener
+
+  Listener: # Port 443 W/ SSL
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroup
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 443
+      Protocol: HTTPS
+      SslPolicy: "ELBSecurityPolicy-2016-08"
+      Certificates:
+        - CertificateArn: !Ref CertArn
 
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -68,6 +98,16 @@ Resources:
       TargetType: ip
       UnhealthyThresholdCount: 2
       VpcId: !Ref VpcId
+
+  DNSRecordSet:
+      Type: AWS::Route53::RecordSet
+      Properties:
+        HostedZoneId: Z3809G91N7QZJE
+        Name: anthony.elasticoperations.com
+        ResourceRecords:
+          - !GetAtt LoadBalancer.DNSName
+        Type: CNAME
+        TTL: 300
 
 Outputs:
   LoadbalancerUrl:

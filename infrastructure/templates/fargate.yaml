@@ -33,7 +33,7 @@ Resources:
   ContainerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: "Allow traffic to container port"
+      GroupDescription: "Allow traffic to container's port"
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: !Ref AppPort
@@ -65,6 +65,7 @@ Resources:
       DeploymentConfiguration:
         MaximumPercent: 200
         MinimumHealthyPercent: 50
+
   ServiceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -141,3 +142,4 @@ Resources:
                   - ecs:List*
                   - logs:*
                 Resource: "*"
+

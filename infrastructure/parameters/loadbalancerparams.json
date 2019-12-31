@@ -10,5 +10,9 @@
     {
         "ParameterKey": "VpcId",
         "ParameterValue": "vpc-001084ff8ad166449"
+    },
+    {
+        "ParameterKey": "CertArn",
+        "ParameterValue": "arn:aws:acm:us-east-1:324320755747:certificate/f0cb5933-f42d-4b73-a971-b74ad8b86da3"
     }
 ]

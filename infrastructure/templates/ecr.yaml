@@ -13,7 +13,7 @@ Resources:
   
 Outputs:
   ECROutput:
-    Description: "Arn of ECR"
+    Description: "ARN of ECR"
     Value: !Ref AnthonyMiniProject
     Export:
       Name: "anthony-mini-project-ecr"
