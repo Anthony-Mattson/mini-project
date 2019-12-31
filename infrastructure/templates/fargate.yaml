@@ -2,52 +2,142 @@ Description: "Template for deploying the Fargate resources."
 
 Parameters:
   AppPort:
-    Descirption: "Port exposed by the container."
+    Description: "Port exposed by the container."
     Default: 9292
-  Image: 
-    Descirption: "Default docker image."
-    Default: "324320755747.dkr.ecr.us-east-1.amazonaws.com/anthony-miniproject:latest"
+    Type: Number
+
+  Image:
+    Description: "Default docker image."
+    Default: "324320755747.dkr.ecr.us-east-1.amazonaws.com/anthony-mini-project:latest"
     Type: String
+
+  SubnetId1:
+    Description: "Default subnet 1"
+    Type: String
+    Default: subnet-0265a4fe3f9a4a89f
+
+  SubnetId2:
+    Description: "Default subnet 2"
+    Type: String
+    Default: subnet-0bc34574b93d7220f
+
+  VpcId:
+    Description: "Default VpcId"
+    Type: String
+    Default: vpc-001084ff8ad166449
 
 Resources:
   Cluster:
     Type: AWS::ECS::Cluster
 
+  ContainerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Allow traffic to container port"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: !Ref AppPort
+          ToPort: !Ref AppPort
+          SourceSecurityGroupId: !ImportValue anthony-mini-project-http-security-group-id
+      VpcId: !Ref VpcId
+
   Service:
     Type: AWS::ECS::Service
-    Propeties:
-      ServiceName: "anthony-miniproject"
+    Properties:
+      ServiceName: "anthony-mini-project"
       Cluster: !Ref Cluster
       DesiredCount: 1
       LaunchType: FARGATE
+      HealthCheckGracePeriodSeconds: 60
       TaskDefinition: !Ref TaskDefinition
-      LoadBalancer:
-        ContainerName: "anthony_mini_project"
-        ContainerPort: !Ref AppPort
-        TargetGroupArn: !Ref output from load balancer template
-      DeploymentController: ECS 
+      LoadBalancers:
+        - ContainerName: "anthony-mini-project"
+          ContainerPort: !Ref AppPort
+          TargetGroupArn: !ImportValue anthony-mini-project-target-group-arn
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets:
+            - !Ref SubnetId1
+            - !Ref SubnetId2
+          SecurityGroups:
+            - !Ref ContainerSecurityGroup
       DeploymentConfiguration:
-        MaximumPercent: 200 
+        MaximumPercent: 200
         MinimumHealthyPercent: 50
+  ServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+      Policies:
+        - PolicyName: anthonyMiniProjectServiceRole
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action: "*"
+                Resource: "*"
 
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
-    Properties: 
+    Properties:
+      Cpu: "256"
+      ExecutionRoleArn: !GetAtt TaskRole.Arn
+      Memory: "512"
       RequiresCompatibilities:
         - "FARGATE"
-      ContainerDefinitions: 
-        - Name: "anthony-miniproject"
+      ContainerDefinitions:
+        - Name: "anthony-mini-project"
           Image: !Ref Image
-          Cpu: 256
-          Memory: 0.5GB
-          Heathcheck:
-            Command: 
-              - [ "CMD-SHELL", "curl -f http://localhost:9292/health || exit 1" ]
+          LogConfiguration:
+            LogDriver: "awslogs"
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: "us-east-1"
+              awslogs-stream-prefix: "ecs"
+          HealthCheck:
+            Command:
+              - "CMD-SHELL"
+              - "curl -f http://localhost:9292/health || exit 1"
             Interval: 30
             Retries: 3
             Timeout: 5
           PortMappings:
-            ContainerPort: !Ref AppPort
-            Protocol: tcp
+            - ContainerPort: !Ref AppPort
+              Protocol: tcp
       NetworkMode: awsvpc
 
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: Fargateproject
+
+  TaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs-tasks.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+      Policies:
+        - PolicyName: AnthonyMiniProjectTaskRole
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecr:*
+                  - ecs:List*
+                  - logs:*
+                Resource: "*"

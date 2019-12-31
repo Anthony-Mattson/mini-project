@@ -2,7 +2,7 @@ Description: "Ecr template for mini-project that deploys the pipeline and it's d
 Parameters: 
   RepoName: 
     Type: String
-    Default: anthony-miniproject
+    Default: anthony-mini-project
     Description: Repository name for the miniproject
 
 Resources:

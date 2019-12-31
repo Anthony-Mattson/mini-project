@@ -1,9 +1,4 @@
 Parameters:
-  VpcId:
-    Description: "Default VpcId"
-    Type: String
-    Default: vpc-001084ff8ad166449
-
   SubnetId1:
     Description: "Default subnet 1"
     Type: String
@@ -14,15 +9,19 @@ Parameters:
     Type: String
     Default: subnet-0bc34574b93d7220f
 
+  VpcId:
+    Description: "Default VpcId"
+    Type: String
+    Default: vpc-001084ff8ad166449
+
 Resources:
   HttpSecurityGroup:
     Type: AWS::EC2::SecurityGroup
-    Properties: 
+    Properties:
       GroupDescription: "Allow inbound traffic from the internet"
       GroupName: anthony-mini-project-security-group
-      SecurityGroupIngress: 
-        -  
-          CidrIp: 0.0.0.0/0
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
           Description: "Inbound traffic from internet"
           FromPort: 80
           IpProtocol: tcp
@@ -35,19 +34,26 @@ Resources:
       Scheme: internet-facing
       SecurityGroups:
         - !GetAtt HttpSecurityGroup.GroupId
-      Subnets: 
+      Subnets:
         - !Ref SubnetId1
         - !Ref SubnetId2
       Type: application
   Listener:
     Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties: 
-      DefaultActions: 
+    Properties:
+      DefaultActions:
         - Type: forward
           TargetGroupArn: !Ref TargetGroup
       LoadBalancerArn: !Ref LoadBalancer
       Port: 80
       Protocol: HTTP
+
+  ListenerCertificate:
+    Type: AWS::ElasticLoadBalancingV2::ListenerCertificate
+    Properties: 
+      Certificates: 
+        - Certificate
+        ListenerArn: String
 
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -59,11 +65,21 @@ Resources:
       HealthyThresholdCount: 5
       Port: 9292
       Protocol: HTTP
+      TargetType: ip
       UnhealthyThresholdCount: 2
       VpcId: !Ref VpcId
 
 Outputs:
-  LoadbalancerUrl: 
+  LoadbalancerUrl:
     Description: "Load balancer url"
-    Value: 
-      !GetAtt LoadBalancer.DNSName
+    Value: !GetAtt LoadBalancer.DNSName
+  TargetGroupArn:
+    Description: "Arn of the target group"
+    Value: !Ref TargetGroup
+    Export:
+      Name: "anthony-mini-project-target-group-arn"
+  HttpSecurityGroup:
+    Description: "ID of HttpSecuritGroup"
+    Value: !Ref HttpSecurityGroup
+    Export:
+      Name: "anthony-mini-project-http-security-group-id"

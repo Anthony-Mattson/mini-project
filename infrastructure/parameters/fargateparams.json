@@ -1,0 +1,22 @@
+[
+    {
+        "ParameterKey": "AppPort",
+        "ParameterValue": "9292"
+    },
+    {
+        "ParameterKey": "Image",
+        "ParameterValue": "324320755747.dkr.ecr.us-east-1.amazonaws.com/anthony-mini-project:latest"
+    },
+    {
+        "ParameterKey": "SubnetId1",
+        "ParameterValue": "subnet-0265a4fe3f9a4a89f"
+    },
+    {
+        "ParameterKey": "SubnetId2",
+        "ParameterValue": "subnet-0bc34574b93d7220f"
+    },
+    {
+        "ParameterKey": "VpcId",
+        "ParameterValue": "vpc-001084ff8ad166449"
+    }
+]
