@@ -1,4 +1,4 @@
-Description: "Ecr template for mini-project that deploys the pipeline and it's dependancies."
+Description: "Ecr template for mini-project."
 Parameters: 
   RepoName: 
     Type: String
