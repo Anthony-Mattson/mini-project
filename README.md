@@ -20,6 +20,8 @@ Provision a new web app server with the following expectations
 - The web app than must return the current timestamp and “Automation for the People!”.
 - Must be over an SSL connection.
 
+- The final url for the project is : http://anthony.elasticoperations.com/ as well as http://anthony.elasticoperations.com/health
+
 ### Deployment
 
 - One click deploy with a single command.
