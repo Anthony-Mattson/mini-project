@@ -33,12 +33,12 @@ Resources:
   ContainerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: "Allow traffic to container's port"
+      GroupDescription: "Allow traffic to container port"
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: !Ref AppPort
           ToPort: !Ref AppPort
-          SourceSecurityGroupId: !ImportValue anthony-mini-project-http-security-group-id
+          SourceSecurityGroupId: !ImportValue anthony-groupid
       VpcId: !Ref VpcId
 
   Service:
